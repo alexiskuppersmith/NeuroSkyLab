@@ -12,6 +12,8 @@ public class RollerBall : MonoBehaviour {
 	public AudioClip CoinSound;
 	public Camera otherCamera; 
 	public int coinsAccrued = 0; 
+	public GameObject MindWave; 
+	private DisplayData controller; 
 
 	private Rigidbody mRigidBody = null;
 	private AudioSource mAudioSource = null;
@@ -19,6 +21,7 @@ public class RollerBall : MonoBehaviour {
 
 
 	void Start () {
+		controller = MindWave.GetComponent<DisplayData> (); 
 		mRigidBody = GetComponent<Rigidbody> ();
 		mAudioSource = GetComponent<AudioSource> ();
 		 
@@ -86,24 +89,20 @@ public class RollerBall : MonoBehaviour {
 
 	void UpdateCoins()
 	{
-		//GUILayout.Label("Coins: " + coinsAccrued);
-		if (coinsAccrued >= 5) {
-			Debug.Log ("About to Switch the Cameras"); 
+		//GUILayout.Label("Coins: " + coinsAccrued)
+		//HERE IS WHERE WE TEST WHETHER OR NOT TO SWITCH THE CAMERA
+		if (coinsAccrued >= 3 &&  controller.attention1 >= 70) {
 			StartCoroutine(TimedCameraSwitch (6.0f));
+			coinsAccrued = 0; 
 		}
-
-			//cameraSwitch(); 
+				
 	}
 	void cameraSwitch(){
-		Debug.Log ("In Camera Switch Function"); 
+		
 		if (ViewCamera.enabled) {
-			Debug.Log ("Switch Camera");
-			//ViewCamera.activeSelf.Equals (false); 
-			//otherCamera.activeSelf.Equals (true);
 			ViewCamera.enabled = false; 
 			otherCamera.enabled = true; 
 		} else {
-			Debug.Log ("Switch back");
 			ViewCamera.enabled = true; 
 			otherCamera.enabled = false; 
 		}

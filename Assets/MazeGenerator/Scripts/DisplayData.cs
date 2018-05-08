@@ -12,15 +12,15 @@ public class DisplayData : MonoBehaviour
     private int poorSignal1;
     public int attention1;
     private int meditation1;
-	//public int coinsAccrued; 
-	public GameObject ballGO;
-	RollerBall ball;
+	public int coinsAccrued; 
+	//public GameObject ballGO;
+	//RollerBall ball;
 	
 	private float delta;
 
     void Start()
     {
-		ball = ballGO.GetComponent<RollerBall> ();
+		//ball = ballGO.GetComponent<RollerBall> ();
 		controller = GameObject.Find("NeuroSkyTGCController").GetComponent<TGCConnectionController>();
 		
 		controller.UpdatePoorSignalEvent += OnUpdatePoorSignal;
@@ -81,7 +81,6 @@ public class DisplayData : MonoBehaviour
         GUILayout.Label("Attention1: " + attention1);
         GUILayout.Label("Meditation1: " + meditation1);
 		GUILayout.Label("Delta: " + delta);
-		//GUILayout.Label("Coins: " + ball.coinsAccrued);
 
 
     }
