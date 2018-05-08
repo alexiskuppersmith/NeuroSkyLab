@@ -6,21 +6,22 @@ using System.Collections;
 //</summary>
 public class RollerBall : MonoBehaviour {
 
-	public GameObject ViewCamera = null;
-	public AudioClip JumpSound = null;
-	public AudioClip HitSound = null;
-	public AudioClip CoinSound = null;
-	public GameObject otherCamera = null; 
-	public int coinsAccrued; 
+	public Camera ViewCamera;
+	public AudioClip JumpSound;
+	public AudioClip HitSound;
+	public AudioClip CoinSound;
+	public Camera otherCamera; 
+	public int coinsAccrued = 0; 
 
 	private Rigidbody mRigidBody = null;
 	private AudioSource mAudioSource = null;
 	private bool mFloorTouched = false;
 
+
 	void Start () {
 		mRigidBody = GetComponent<Rigidbody> ();
 		mAudioSource = GetComponent<AudioSource> ();
-		UpdateCoins (); 
+		 
 	}
 
 	void FixedUpdate () {
@@ -49,6 +50,7 @@ public class RollerBall : MonoBehaviour {
 			}
 			ViewCamera.transform.LookAt(transform.position);
 		}
+
 	}
 
 	void OnCollisionEnter(Collision coll){
@@ -76,22 +78,46 @@ public class RollerBall : MonoBehaviour {
 				mAudioSource.PlayOneShot(CoinSound);
 			}
 			Destroy(other.gameObject);
-			coinsAccrued++; 
+			coinsAccrued++;
+			Debug.Log (coinsAccrued);
+			UpdateCoins (); 
 		}
 	}
 
 	void UpdateCoins()
 	{
-		GUILayout.Label("Coins: " + coinsAccrued);
-		if (coinsAccrued == 1)
-			cameraSwitch(); 
+		//GUILayout.Label("Coins: " + coinsAccrued);
+		if (coinsAccrued >= 5) {
+			Debug.Log ("About to Switch the Cameras"); 
+			StartCoroutine(TimedCameraSwitch (6.0f));
+		}
+
+			//cameraSwitch(); 
 	}
 	void cameraSwitch(){
-		ViewCamera.activeSelf.Equals(false); 
-		otherCamera.activeSelf.Equals(true);
-		//ViewCamera.activeSelf = true; 
-		//otherCamera.activeSelf = false;
+		Debug.Log ("In Camera Switch Function"); 
+		if (ViewCamera.enabled) {
+			Debug.Log ("Switch Camera");
+			//ViewCamera.activeSelf.Equals (false); 
+			//otherCamera.activeSelf.Equals (true);
+			ViewCamera.enabled = false; 
+			otherCamera.enabled = true; 
+		} else {
+			Debug.Log ("Switch back");
+			ViewCamera.enabled = true; 
+			otherCamera.enabled = false; 
+		}
+	}
 
+	IEnumerator TimedCameraSwitch(float duration) {
+		float t = 0.0f;
+		Debug.Log ("Timer Called");
+		cameraSwitch ();
+		while (t < duration) {
+			t += Time.deltaTime;
+			yield return null;
+		}
+		cameraSwitch ();
 
 	}
 
